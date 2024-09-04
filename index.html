@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GERAT — Lista de Contratos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="index.js" defer></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="w-100 px-10 mx-auto mt-10">
+        <div class="mb-8 flex justify-between items-center">
+            <div class="text-3xl font-black">
+                <h1 class="uppercase text-gray-500">Tabela de Contratos</h1>
+            </div>
+            <button id="actionButton" class="bg-blue-500 text-white py-3 px-5 rounded hover:bg-blue-700 font-bold"
+                title="Abre o formulário para criação de contratos" onclick="showCreationTypeModal()">
+                Novo Contrato
+            </button>
+        </div>
+
+        <div class="bg-white shadow sm:rounded-lg">
+
+            <div class="px-4 py-5 sm:px-6 flex items-center justify-start gap-x-6">
+                <h3 class="text-base leading-6 font-black uppercase text-gray-500">
+                    Cod. da planilha:<span id="sheetId"
+                        class="text-base text-gray-500 font-medium tracking-wider ml-2"><!-- GERADO DINAMICAMENTE --></span>
+                </h3>
+                <button title="Sincroniza os dados da planilha google com a tabela" onclick="refreshTable()"
+                    class="bg-green-100 text-green-800 py-2 px-3 rounded hover:bg-green-200 font-medium rounded-full border border-green-500">
+                    Sincronizar Planilha
+                </button>
+            </div>
+
+            <!-- TABELA -->
+            <div id="mainTableContainer" class="border-t border-gray-200">
+                <table id="mainTable" class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Cod. do Contrato</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Data Atualização</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Número Contrato</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Emitente</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                CPF/CNPJ</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Segmento</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Garantia</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Produto</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Saldo Contábil</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Adicionais</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Andamento</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- SERÁ GERADO DINAMICAMENTE -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- MODAL DE CADASTRO -->
+        <div id="creationTypeModal" class="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 hidden">
+
+            <div class="w-[45vw] h-full p-8 shadow-lg transition-transform transform translate-x-full bg-gray-50 overflow-auto"
+                id="creationModalContent">
+                <h2 id="creationModalTitle" class="text-2xl font-black mb-4 uppercase text-gray-500">
+                    <!-- VAI SER PREENCHIDO DINAMICAMENTE -->
+                </h2>
+
+                <form id="creationTypeForm">
+                    <div class="mb-4">
+                        <label for="creationDateInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Data
+                            Atualização:</label>
+                        <input type="date" name="creationDateInput" id="creationDateInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationCNumberInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Número
+                            Contrato:</label>
+                        <input type="text" name="creationCNumberInput" id="creationCNumberInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationIssuerInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Emitente:</label>
+                        <input type="text" name="creationIssuerInput" id="creationIssuerInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationDocInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">CPF/CNPJ:</label>
+                        <input type="text" name="creationDocInput" id="creationDocInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationSegInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Segmento:</label>
+                        <input type="text" name="creationSegInput" id="creationSegInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationGuaranteeInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Garantia:</label>
+                        <input type="text" name="creationGuaranteeInput" id="creationGuaranteeInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationProdInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Produto:</label>
+                        <input type="text" name="creationProdInput" id="creationProdInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationAmountInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Saldo
+                            Contábil:</label>
+                        <input type="number" name="creationAmountInput" id="creationAmountInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationAddInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Adicionais:</label>
+                        <input type="text" name="creationAddInput" id="creationAddInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="creationStatusInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Andamento:</label>
+                        <input type="text" name="creationStatusInput" id="creationStatusInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button id="saveButton" type="submit" name="saveButton"
+                            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+                            Cadastrar
+                        </button>
+
+                        <button type="button" class="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300"
+                            onclick="closeModal('creationTypeModal', 'creationModalContent')">Sair</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL DE EDIÇÃO, VIZUALIZAÇÃO E REMOÇÃO -->
+        <div id="actionTypeModal" class="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 hidden">
+            <div class="w-[45vw] h-full p-8 shadow-lg transition-transform transform translate-x-full bg-gray-50 overflow-auto"
+                id="actionModalContent">
+                <h2 id="actionModalTitle" class="text-2xl font-black mb-4 uppercase text-gray-500">
+                    <!-- VAI SER PREENCHIDO DINAMICAMENTE -->
+                </h2>
+                <form id="actionTypeForm">
+                    <div class="mb-4">
+                        <label for="actionIdInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">ID
+                            Contrato:</label>
+                        <input type="text" name="actionIdInput" disabled id="actionIdInput"
+                            class="w-full px-4 py-2 border rounded-lg cursor-not-allowed">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionDateInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Data
+                            Atualização:</label>
+                        <input type="datetime-local" name="actionDateInput" id="actionDateInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionCNumberInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Número
+                            Contrato:</label>
+                        <input type="text" name="actionCNumberInput" id="actionCNumberInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionIssuerInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Emitente:</label>
+                        <input type="text" name="actionIssuerInput" id="actionIssuerInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionDocInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">CPF/CNPJ:</label>
+                        <input type="text" name="actionDocInput" id="actionDocInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionSegInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Segmento:</label>
+                        <select id="actionSegInput" name="actionSegInput"
+                            class="w-full border rounded-lg text-gray-600 bg-white px-4 py-2">
+                            <!-- PREENCHIDO DINAMICAMENTE -->
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionGuaranteeInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Garantia:</label>
+                        <select id="actionGuaranteeInput" name="actionGuaranteeInput"
+                            class="w-full border rounded-lg text-gray-600 bg-white px-4 py-2">
+                            <!-- PREENCHIDO DINAMICAMENTE -->
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionProdInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Produto:</label>
+                        <input type="text" name="actionProdInput" id="actionProdInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionAmountInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Saldo
+                            Contábil:</label>
+                        <input type="text" name="actionAmountInput" id="actionAmountInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionAddInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Adicionais:</label>
+                        <select id="actionAddInput" name="actionAddInput"
+                            class="w-full border rounded-lg text-gray-600 bg-white px-4 py-2">
+                            <!-- PREENCHIDO DINAMICAMENTE -->
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="actionStatusInput"
+                            class="block text-sm font-semibold text-gray-500 uppercase tracking-wider">Andamento:</label>
+                        <input type="text" id="actionStatusInput" name="actionStatusInput"
+                            class="w-full px-4 py-2 border rounded-lg">
+                    </div>
+                    <div id="actionModelButtons" class="flex justify-end space-x-4">
+                        <!-- BOTÕES GERADOS DINAMICAMENTE -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
